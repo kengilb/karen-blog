@@ -71,6 +71,7 @@ class ComposerStaticInitDrupal8
             'Symfony\\Cmf\\Component\\Routing\\' => 30,
             'Symfony\\Bridge\\PsrHttpMessage\\' => 30,
             'Symfony\\Bridge\\PhpUnit\\' => 23,
+            'SendGrid\\' => 9,
         ),
         'R' => 
         array (
@@ -95,6 +96,10 @@ class ComposerStaticInitDrupal8
         'I' => 
         array (
             'Interop\\Container\\' => 18,
+        ),
+        'H' => 
+        array (
+            'Html2Text\\' => 10,
         ),
         'G' => 
         array (
@@ -283,6 +288,10 @@ class ComposerStaticInitDrupal8
         array (
             0 => __DIR__ . '/..' . '/symfony/phpunit-bridge',
         ),
+        'SendGrid\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/fastglass/sendgrid/src',
+        ),
         'Robo\\' => 
         array (
             0 => __DIR__ . '/..' . '/consolidation/robo/src',
@@ -318,6 +327,11 @@ class ComposerStaticInitDrupal8
         'Interop\\Container\\' => 
         array (
             0 => __DIR__ . '/..' . '/container-interop/container-interop/src/Interop/Container',
+        ),
+        'Html2Text\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/html2text/html2text/src',
+            1 => __DIR__ . '/..' . '/html2text/html2text/test',
         ),
         'GuzzleHttp\\Psr7\\' => 
         array (
@@ -449,6 +463,10 @@ class ComposerStaticInitDrupal8
             'Stack' => 
             array (
                 0 => __DIR__ . '/..' . '/stack/builder/src',
+            ),
+            'Smtpapi' => 
+            array (
+                0 => __DIR__ . '/..' . '/sendgrid/smtpapi/lib',
             ),
         ),
         'P' => 

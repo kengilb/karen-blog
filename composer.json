@@ -20,7 +20,10 @@
         "drupal/recaptcha": "^2.2",
         "enyo/dropzone": "^5.1",
         "drupal/field_group": "^1.0",
-        "drupal/memcache": "^2.0@alpha"
+        "drupal/memcache": "^2.0@alpha",
+        "drupal/sendgrid_integration": "^1.1",
+        "drupal/mailsystem": "^4.1",
+        "drupal/smtp": "^1.0@beta"
     },
     "replace": {
         "drupal/core": "^8.4"
