@@ -1,0 +1,11 @@
+name: karen-blog
+recipe: drupal8
+config:
+  webroot: .
+services:
+  appserver:
+    xdebug: true
+  cache:
+    type: memcached:1.4
+    mem: 128
+    portforward: 11222

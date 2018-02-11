@@ -1,0 +1,5 @@
+# Schema for the theme setting configuration file of the Kblog theme.
+
+kblog.settings:
+  type: theme_settings
+  label: 'Karen Blog settings'
