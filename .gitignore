@@ -37,3 +37,6 @@ sites/simpletest
 
 # Ignore PHPStorm .idea files
 .idea
+
+# Ignore OSX files.
+.DS_Store
