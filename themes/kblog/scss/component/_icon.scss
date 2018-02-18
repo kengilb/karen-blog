@@ -24,3 +24,16 @@ a {
     margin-right: -.25em;
   }
 }
+
+.feed-icons {
+  margin-top: 1em;
+}
+
+.feed-icon {
+  background: url(/core/misc/feed.svg) no-repeat;
+  overflow: hidden;
+  text-indent: -9999px;
+  display: block;
+  width: 16px;
+  height: 16px;
+}

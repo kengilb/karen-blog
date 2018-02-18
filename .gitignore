@@ -40,3 +40,6 @@ sites/simpletest
 
 # Ignore OSX files.
 .DS_Store
+
+# Ignore the SASS cache.
+.sass-cache

@@ -6053,6 +6053,17 @@ a.icon-after .glyphicon, a .glyphicon.icon-after {
   margin-left: .25em;
   margin-right: -.25em; }
 
+.feed-icons {
+  margin-top: 1em; }
+
+.feed-icon {
+  background: url(/core/misc/feed.svg) no-repeat;
+  overflow: hidden;
+  text-indent: -9999px;
+  display: block;
+  width: 16px;
+  height: 16px; }
+
 /**
  * Navbar styling.
  */
@@ -6093,6 +6104,9 @@ body {
     .navbar .logo {
       margin-right: 0;
       padding-left: 0; } }
+  .navbar .logo img {
+    height: 32px;
+    width: 32px; }
 
 /**
  * Node styling.
@@ -6362,5 +6376,3 @@ p:last-child,
   padding: 0; }
   .help-block:first-child, .control-group .help-inline:first-child {
     margin-top: 0; }
-
-/*# sourceMappingURL=style.css.map */
