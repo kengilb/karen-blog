@@ -13,3 +13,14 @@
 .node-preview-form-select {
   padding: ($grid-gutter-width / 2);
 }
+
+.content {
+  & > .field {
+    margin-bottom: 1em;
+  }
+  .field--type-entity-reference {
+    & > .field--label {
+      margin-bottom: .5em;
+    }
+  }
+}
