@@ -72,3 +72,21 @@ body {
   }
 }
 
+.navbar {
+  font-size: 20px;
+  border-bottom: 1px solid #000000;
+
+  .navbar-collapse {
+    font-family: 'Dancing Script', cursive;
+
+    .menu--main {
+      li {
+        border-right: 1px solid #000000;
+
+        &:last-child {
+          border-right: none;
+        }
+      }
+    }
+  }
+}

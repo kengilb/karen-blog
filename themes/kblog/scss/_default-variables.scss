@@ -14,3 +14,21 @@
 $icon-font-path: '../bootstrap/assets/fonts/bootstrap/';
 
 $brand-primary:         #00cece;
+
+$navbar-border-radius:             0;
+
+$navbar-default-color:             #000000;
+$navbar-default-bg:                #ffffff;
+$navbar-default-border:            #ffffff;
+
+// Navbar links
+$navbar-default-link-color:                #000000;
+$navbar-default-link-hover-color:          lighten($navbar-default-link-color, 6.5%);
+$navbar-default-link-hover-bg:             #ffffff;
+$navbar-default-link-active-color:         lighten($navbar-default-link-color, 6.5%);
+$navbar-default-link-active-bg:            #ffffff;
+
+// Navbar brand label
+//$navbar-default-brand-color:               $navbar-default-link-color !default;
+//$navbar-default-brand-hover-color:         darken($navbar-default-brand-color, 10%) !default;
+//$navbar-default-brand-hover-bg:            transparent !default;
