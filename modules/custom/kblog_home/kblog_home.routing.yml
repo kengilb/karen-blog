@@ -1,0 +1,7 @@
+kblog.home:
+  path: '/home'
+  defaults:
+    _controller: '\Drupal\kblog_home\Controller\KblogHomeController::home'
+    _title: 'Homepage'
+  requirements:
+    _permission: 'access content'

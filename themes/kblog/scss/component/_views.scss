@@ -1,0 +1,23 @@
+.view-categories {
+  .views-row {
+
+    & > div {
+      text-align: center;
+      border: 1px solid #000000;
+      border-radius: 20px;
+      height: 125px;
+      overflow: scroll;
+      word-break: break-word;
+      margin-bottom: 1em;
+    }
+
+    h2 {
+      padding: 0 1em;
+      margin-bottom: 20px;
+    }
+
+    .field--name-description {
+      padding: 0 1em;
+    }
+  }
+}

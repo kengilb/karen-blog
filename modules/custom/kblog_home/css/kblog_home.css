@@ -1,0 +1,38 @@
+.main-container {
+    /*background: url(../images/homepage.jpg);*/
+    /*background-size: cover;*/
+    border-radius: 20px;
+}
+
+.home-headline {
+    position: absolute;
+    top: 4%;
+    left: 7%;
+    color: #ffffff;
+    font-size: 2em;
+    -webkit-text-stroke-width: .01em;
+    -webkit-text-stroke-color: #000000;
+}
+
+.home-banner-img {
+    border-radius: 20px;
+}
+
+.home-book-cta {
+    position: absolute;
+    bottom: 7%;
+    right: 3%;
+    color: white;
+    height: 40%;
+    width: 25%;
+}
+
+.home-book-cta-text {
+    position: absolute;
+    bottom: 25%;
+    right: 8%;
+    color: #ffff00;
+    font-size: 1.2em;
+    -webkit-text-stroke-width: .01em;
+    -webkit-text-stroke-color: #000000;
+}

@@ -1,0 +1,10 @@
+name: Level1Writer Blog Home
+description: Provides a homepage for Level1Writer's Blog.
+package: Level1Writer
+
+type: module
+# core: 8.x
+
+version: '8.x-0.1'
+core: '8.x'
+project: 'kblog_home'
