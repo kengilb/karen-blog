@@ -25,7 +25,8 @@
         "drupal/mailsystem": "^4.1",
         "drupal/smtp": "^1.0@beta",
         "drupal/copyright_block": "^1.0@RC",
-        "drupal/social_media_links": "^2.6"
+        "drupal/social_media_links": "^2.6",
+        "drupal/facebook_comments": "^1.0"
     },
     "replace": {
         "drupal/core": "^8.5"
