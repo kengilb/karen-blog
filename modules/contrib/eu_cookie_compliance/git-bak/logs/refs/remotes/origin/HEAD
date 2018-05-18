@@ -1,0 +1,1 @@
+0000000000000000000000000000000000000000 39171a129c12950c056fa158e02848ac42d2d9eb Ken Gilbert <kenneth.james.gilbert@gmail.com> 1526669452 -0700	clone: from /Users/kengilbert/.composer/cache/vcs/https---git.drupal.org-project-eu-cookie-compliance/
