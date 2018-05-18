@@ -1,0 +1,11 @@
+name: Anonymizer
+description: Provides ways to anonymize data.
+# core: 8.x
+type: module
+package: General Data Protection Regulation
+
+# Information added by Drupal.org packaging script on 2018-05-18
+version: '8.x-1.0-alpha11'
+core: '8.x'
+project: 'gdpr'
+datestamp: 1526664795
