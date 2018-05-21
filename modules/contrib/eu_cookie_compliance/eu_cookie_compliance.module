@@ -130,7 +130,7 @@ function eu_cookie_compliance_page_attachments(&$attachments) {
     $data['css'] = '';
     // Color overrides.
     if ($config->get('popup_bg_hex') !== '' && $config->get('popup_text_hex') !== '') {
-      $data['css'] = 'div#sliding-popup {background:#' . Html::escape($config->get('popup_bg_hex')) . '} #sliding-popup h1, #sliding-popup h2, #sliding-popup h3, #sliding-popup p, .eu-cookie-compliance-more-button, .eu-cookie-compliance-secondary-button { color:#' . Html::escape($config->get('popup_text_hex')) . ';}';
+      $data['css'] = 'div#sliding-popup, div#sliding-popup .eu-cookie-withdraw-banner, .eu-cookie-withdraw-tab {background: #' . Html::escape($config->get('popup_bg_hex')) . '} div#sliding-popup.eu-cookie-withdraw-wrapper { background: transparent; } #sliding-popup h1, #sliding-popup h2, #sliding-popup h3, #sliding-popup p, .eu-cookie-compliance-more-button, .eu-cookie-compliance-secondary-button, .eu-cookie-withdraw-tab { color: #' . Html::escape($config->get('popup_text_hex')) . ';} .eu-cookie-withdraw-tab { border-color: #' . Html::escape($config->get('popup_text_hex')) . ';}';
     }
     if (!empty($config->get('popup_position')) && $config->get('popup_position') && !empty($config->get('fixed_top_position')) && $config->get('fixed_top_position')) {
       $data['css'] .= '#sliding-popup.sliding-popup-top { position: fixed; }';
@@ -179,6 +179,7 @@ function eu_cookie_compliance_page_attachments(&$attachments) {
 
     $popup_text_info = str_replace(["\r", "\n"], '', $config->get('popup_info.value'));
     $popup_text_agreed = str_replace(["\r", "\n"], '', $config->get('popup_agreed.value'));
+    $withdraw_markup = str_replace(["\r", "\n"], '', $config->get('withdraw_message.value'));
     $html_info = [
       '#theme' => 'eu_cookie_compliance_popup_info',
       '#message' => check_markup($popup_text_info, $config->get('popup_info.format'), FALSE),
@@ -204,6 +205,12 @@ function eu_cookie_compliance_page_attachments(&$attachments) {
       '#hide_button' => $config->get('popup_hide_button_message'),
       '#find_more_button' => ($config->get('show_disagree_button') == TRUE) ? $config->get('popup_find_more_button_message') : FALSE,
     ];
+    $withdraw_markup = [
+      '#theme' => 'eu_cookie_compliance_withdraw',
+      '#message' => check_markup($withdraw_markup, $config->get('withdraw_message.format'), FALSE),
+      '#withdraw_tab_button_label' => $config->get('withdraw_tab_button_label'),
+      '#withdraw_action_button_label' => $config->get('withdraw_action_button_label'),
+    ];
 
     $was_debugging = FALSE;
 
@@ -220,6 +227,7 @@ function eu_cookie_compliance_page_attachments(&$attachments) {
     $html_info = trim(Drupal::service('renderer')->renderRoot($html_info)->__toString());
     $mobile_html_info = trim(Drupal::service('renderer')->renderRoot($mobile_html_info)->__toString());
     $html_agreed = trim(Drupal::service('renderer')->renderRoot($html_agreed)->__toString());
+    $withdraw_markup = trim(Drupal::service('renderer')->renderRoot($withdraw_markup)->__toString());
 
     if ($was_debugging) {
       $twig_service->enableDebug();
@@ -261,9 +269,12 @@ function eu_cookie_compliance_page_attachments(&$attachments) {
       'domain'               => $config->get('domain'),
       'popup_eu_only_js'     => !empty($config->get('eu_only_js')) ? $config->get('eu_only_js') : FALSE,
       'cookie_lifetime'      => $config->get('cookie_lifetime'),
+      'cookie_session'       => $config->get('cookie_session'),
       'disagree_do_not_show_popup' => !empty($config->get('disagree_do_not_show_popup')) ? $config->get('disagree_do_not_show_popup') : FALSE,
       'method'               => $method,
       'whitelisted_cookies'  => !empty($config->get('whitelisted_cookies')) ? $config->get('whitelisted_cookies') : '',
+      'withdraw_markup'      => $withdraw_markup,
+      'withdraw_enabled'     => $config->get('withdraw_enabled'),
     ];
 
     $attachments['#attached']['drupalSettings']['eu_cookie_compliance'] = $data['variables'];
@@ -310,6 +321,27 @@ function eu_cookie_compliance_page_attachments(&$attachments) {
     ];
     $cache_tags = isset($attachments['#cache']['tags']) ? $attachments['#cache']['tags'] : [];
     $attachments['#cache']['tags'] = Cache::mergeTags($cache_tags, $config->getCacheTags());
+
+    // Check if disabled scripts are in page html_head.
+    $disabled_javascripts = $config->get('disabled_javascripts');
+    $disabled_javascripts = _eu_cookie_compliance_explode_multiple_lines($disabled_javascripts);
+    $disabled_javascripts = array_filter($disabled_javascripts);
+
+    if (!empty($disabled_javascripts)) {
+      foreach ($attachments['#attached']['html_head'] as $index => $asset) {
+        $is_script = !empty($asset[0]['#type']) && $asset[0]['#type'] == 'html_tag' && $asset[0]['#tag'] == 'script';
+        $is_src = !empty($asset[0]['#attributes']['src']);
+        if (!$is_script || !$is_src) {
+          continue;
+        }
+        $src = $asset[0]['#attributes']['src'];
+        $src = preg_replace('/\.js\?[^"]+/', '.js', $src);
+        $src = preg_replace('/^\//', '', $src);
+        if (in_array($src, $disabled_javascripts)) {
+          $attachments['#attached']['html_head'][$index][0]['#access'] = FALSE;
+        }
+      }
+    }
   }
 }
 
@@ -335,6 +367,14 @@ function eu_cookie_compliance_theme($existing, $type, $theme, $path) {
         'message' => NULL,
         'hide_button' => NULL,
         'find_more_button' => NULL,
+      ],
+    ],
+    'eu_cookie_compliance_withdraw' => [
+      'template' => 'eu_cookie_compliance_withdraw',
+      'variables' => [
+        'withdraw_tab_button_label' => NULL,
+        'message' => NULL,
+        'withdraw_action_button_label' => NULL,
       ],
     ],
   ];
@@ -455,4 +495,23 @@ function _eu_cookie_compliance_find_privacy_policy() {
     return ('/node/' . array_shift($result));
   }
   return FALSE;
+}
+
+/**
+ * Helper function to set module weight.
+ */
+function eu_cookie_compliance_module_set_weight() {
+  $weight = 1;
+  $exclude_modules = [
+    'eu_cookie_compliance',
+  ];
+
+  $extension_config = \Drupal::configFactory()->get('core.extension');
+  // Loop through all installed modules to find the highest weight.
+  foreach ($extension_config->get('module') as $module_name => $module_weight) {
+    if ($module_weight > $weight && !in_array($module_name, $exclude_modules)) {
+      $weight = $module_weight + 1;
+    }
+  }
+  module_set_weight('eu_cookie_compliance', $weight);
 }
