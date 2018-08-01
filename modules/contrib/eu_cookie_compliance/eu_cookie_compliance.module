@@ -17,6 +17,7 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\smart_ip\SmartIp;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Asset\AttachedAssetsInterface;
+use Drupal\Component\Serialization\Json;
 
 /**
  * Implements hook_help().
@@ -26,15 +27,9 @@ function eu_cookie_compliance_help($route_name, RouteMatchInterface $route_match
     case 'help.page.eu_cookie_compliance':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('This module intends to deal with the EU Directive on Privacy and Electronic Communications that comes into effect on 26th May 2012.
-        From that date, if you are not compliant or visibly working towards compliance,
-        you run the risk of enforcement action, which can include a fine of up to
-        half a million pounds for a serious breach.') . '</p>';
+      $output .= '<p>' . t('This module intends to deal with the EU Directive on Privacy and Electronic Communications that comes into effect on 26th May 2012. From that date, if you are not compliant or visibly working towards compliance, you run the risk of enforcement action, which can include a fine of up to half a million pounds for a serious breach.') . '</p>';
       $output .= '<h3>' . t('How it works') . '</h3>';
-      $output .= '<p>' . t('The module displays a banner at the bottom or the top of website to make users aware of the fact that cookies are being set. The user may then give
-        his/her consent or move to a page that provides more details. Consent is given
-        by user pressing the agree buttons or by continuing browsing the website. Once
-        consent is given another banner appears with a “Thank you” message.') . '</p>';
+      $output .= '<p>' . t('The module displays a banner at the bottom or the top of website to make users aware of the fact that cookies are being set. The user may then give his/her consent or move to a page that provides more details. Consent is given by user pressing the agree buttons or by continuing browsing the website. Once consent is given another banner appears with a "Thank you" message.') . '</p>';
       $output .= '<p>' . t('The module provides a settings page where the banner can be customized. There are also template files for the banners that can be overridden by your theme.') . '</p>';
       $output .= '<h3>' . t('Installation') . '</h3>';
       $output .= '<ol><p><li>' . t('Unzip the files to the "sites/all/modules" OR "modules" directory and enable the module.') . '</li></p>';
@@ -139,8 +134,8 @@ function eu_cookie_compliance_page_attachments(&$attachments) {
     $method = $config->get('method');
 
     if ($method == 'auto') {
-      $dnt = !empty($_SERVER['HTTP_DNT']) ? $_SERVER['HTTP_DNT'] : NULL;
-      if ($dnt === 0) {
+      $dnt = isset($_SERVER['HTTP_DNT']) ? $_SERVER['HTTP_DNT'] : NULL;
+      if ((int) $dnt === 0 && $dnt !== NULL) {
         $method = 'default';
       }
       else {
@@ -238,6 +233,10 @@ function eu_cookie_compliance_page_attachments(&$attachments) {
       $popup_link = Url::fromUri($popup_link);
     }
     else {
+      // Guard against translations being entered without leading slash.
+      if (substr( $popup_link, 0, 1) != '/' && substr( $popup_link, 0, 1) != '?' && substr( $popup_link, 0, 1) != '#') {
+        $popup_link = '/' . $popup_link;
+      }
       $popup_link = $popup_link === '<front>' ? '/' : $popup_link;
       $popup_link = Url::fromUserInput($popup_link);
     }
@@ -291,14 +290,12 @@ function eu_cookie_compliance_page_attachments(&$attachments) {
       $load_disabled_scripts = '';
       $disabled_javascripts = _eu_cookie_compliance_explode_multiple_lines($disabled_javascripts);
       foreach ($disabled_javascripts as $script) {
-        if (substr($script, 0, 4) !== 'http') {
+        if (substr($script, 0, 4) !== 'http' && substr($script, 0, 2) !== '//') {
           $script = '/' . $script;
         }
-        $load_disabled_scripts .= '
-          var scriptTag = document.createElement(\'script\');
-          scriptTag.src = \'' . $script . '\';
-          document.body.appendChild(scriptTag);
-        ';
+        $load_disabled_scripts .= 'var scriptTag = document.createElement("script");';
+        $load_disabled_scripts .= 'scriptTag.src = ' . Json::encode($script) . ';';
+        $load_disabled_scripts .= 'document.body.appendChild(scriptTag);';
       }
     }
 
