@@ -31,7 +31,7 @@
         "drupal/eu_cookie_compliance": "1.x-dev"
     },
     "replace": {
-        "drupal/core": "^8.5"
+        "drupal/core": "^8.6"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
