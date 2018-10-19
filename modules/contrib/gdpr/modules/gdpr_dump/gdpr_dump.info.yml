@@ -2,15 +2,19 @@ name: General Data Protection Regulation (GDPR) - Obfuscated SQL Dump
 description: Provides a drush command for obfuscating database dumps.
 # core: 8.x
 type: module
-configure: gdpr_dump.settings
 package: General Data Protection Regulation
 
+configure: gdpr_dump.settings
+
+php: 5.6
+
 dependencies:
+  - drupal:system (>=8.0.0)
   - gdpr:gdpr
   - gdpr:anonymizer
 
-# Information added by Drupal.org packaging script on 2018-05-18
-version: '8.x-1.0-alpha11'
+# Information added by Drupal.org packaging script on 2018-10-04
+version: '8.x-1.0-alpha16'
 core: '8.x'
 project: 'gdpr'
-datestamp: 1526664795
+datestamp: 1538645590

@@ -5,11 +5,39 @@ namespace Drupal\gdpr_tasks\Form;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\gdpr_tasks\Entity\Task;
+use Drupal\Core\Queue\QueueFactory;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Form for user task requests.
  */
 class CreateGdprRequestOnBehalfOfUserForm extends FormBase {
+
+  /**
+   * The gdpr_tasks_process_gdpr_sar queue.
+   *
+   * @var \Drupal\Core\Queue\QueueInterface
+   */
+  protected $queue;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('queue')
+    );
+  }
+
+  /**
+   * Constructs a new CreateGdprRequestOnBehalfOfUserForm.
+   *
+   * @param \Drupal\Core\Queue\QueueFactory $queue
+   *   Queue factory.
+   */
+  public function __construct(QueueFactory $queue) {
+    $this->queue = $queue->get('gdpr_tasks_process_gdpr_sar');
+  }
 
   /**
    * {@inheritdoc}
@@ -43,18 +71,24 @@ class CreateGdprRequestOnBehalfOfUserForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $user_id = $this->getRouteMatch()->getParameter('user');
+    $user = $this->getRouteMatch()->getParameter('user');
     $request_type = $this->getRouteMatch()->getParameter('gdpr_task_type');
     $notes = $form_state->getValue('notes');
 
     $task = Task::create([
       'type' => $request_type,
-      'user_id' => $user_id,
+      'user_id' => $user->id(),
       'notes' => $notes,
     ]);
     $task->save();
+
+    if ($request_type === 'gdpr_sar') {
+      $this->queue->createQueue();
+      $this->queue->createItem($task->id());
+    }
+
     $this->messenger()->addStatus('The request has been logged');
-    return $this->redirect('view.gdpr_tasks_my_data_requests.page_1', ['user' => $user_id]);
+    $form_state->setRedirect('view.gdpr_tasks_my_data_requests.page_1', ['user' => $user->id()]);
   }
 
 }
