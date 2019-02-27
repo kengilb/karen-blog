@@ -5,11 +5,13 @@ type: module
 configure: checklistapi.checklists.gdpr_checklist
 package: General Data Protection Regulation
 
+php: 7.1
+
 dependencies:
   - checklistapi:checklistapi
 
-# Information added by Drupal.org packaging script on 2018-10-04
-version: '8.x-1.0-alpha16'
+# Information added by Drupal.org packaging script on 2019-01-02
+version: '8.x-1.0-alpha18'
 core: '8.x'
 project: 'gdpr'
-datestamp: 1538645590
+datestamp: 1546431685
